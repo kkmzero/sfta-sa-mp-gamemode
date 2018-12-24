@@ -4,29 +4,13 @@
 //------------------------------------------------
 
 #include <a_samp>
+#include <i_sampp>
 #include <YSI-Includes-4.x\YSI\y_ini>
 
 //---------------GLOBAL DEFINES-------------------
-#define SFTA_VERSION "v0.3"
+#define SFTA_VERSION "v0.3.1"
 
-//---------------COLORS DEFINES-------------------
-#define COLOR_WHITE 		0xFFFFFFFF
-#define COLOR_GREY 			0xAFAFAFFF
-#define COLOR_GREEN         0x00FF00FF
-#define COLOR_DARKGREEN 	0x33AA33FF
-#define COLOR_RED			0xAA3333FF
-#define COLOR_YELLOW 		0xFFFF00FF
-#define COLOR_BLUE 			0x0000BBFF
-#define COLOR_LIGHTBLUE 	0x33CCFFFF
-#define COLOR_ORANGE		0xFF9900FF
-
-#define SCOL_WHITE "{FFFFFF}"
-#define SCOL_RED "{F81414}"
-#define SCOL_GREEN "{00FF22}"
-#define SCOL_LIGHTBLUE "{00CED1}"
-
-//---------------PICKUPS + ICONS------------------
-#define ICON_ID_SF_POLICE 0
+//-------------------PICKUPS----------------------
 new pickupPoliceSF;
 
 //----------------DIALOG: JOBS--------------------
@@ -37,57 +21,6 @@ new pickupPoliceSF;
 //---------------JOB ID DEFINES-------------------
 #define JOB_NONE 0
 #define JOB_SF_POLICE 1
-
-//--------------SKIN ID DEFINES-------------------
-#define SKIN_ID_CJ 0            //Carl "CJ" Johnson (Main Character)
-#define SKIN_ID_SFPD1 281       //San Fierro Police Officer
-#define SKIN_ID_LAPDM1 284      //LSPD Motorbike Cop
-#define SKIN_ID_SWAT 285        //S.W.A.T Special Forces
-#define SKIN_ID_SFPDNA 301		//San Fierro Police Officer (Without gun holster)
-#define SKIN_ID_VBFYCPD 307		//San Fierro Police Officer(F)
-
-//-------------WEAPON ID DEFINES------------------
-#define WEAP_FIST 0
-#define WEAP_BRASSKNUCKLES 1
-#define WEAP_GOLF_CLUB 2
-#define WEAP_NIGHTSTICK 3
-#define WEAP_KNIFE 4
-#define WEAP_BASEBALLBAT 5
-#define WEAP_SHOVEL 6
-#define WEAP_POOLSTICK 7
-#define WEAP_KATANA 8
-#define WEAP_CHAINSAW 9
-#define WEAP_PUPLEDILDO 10
-#define WEAP_DILDO 11
-#define WEAP_VIBRATOR 12
-#define WEAP_SILVERVIBRATOR 13
-#define WEAP_FLOWERS 14
-#define WEAP_CANE 15
-#define WEAP_GRANADE 16
-#define WEAP_TEARGAS 17
-#define WEAP_MOLOTOV 18
-#define WEAP_PISTOL 22
-#define WEAP_SILENCEDPISTOL 23
-#define WEAP_DEAGLE 24
-#define WEAP_SHOTGUN 25
-#define WEAP_SAWNOFF 26
-#define WEAP_COMBATSHOTGUN 27
-#define WEAP_UZI 28
-#define WEAP_MP5 29
-#define WEAP_AK47 30
-#define WEAP_M4 31
-#define WEAP_TEC9 32
-#define WEAP_RIFLE 33
-#define WEAP_SNIPER 34
-#define WEAP_RPG 35
-#define WEAP_HEATRPG 36
-#define WEAP_FLAMETHROWER 37
-#define WEAP_MINIGUN 38
-#define WEAP_SATCHEL 39
-#define WEAP_SPRAY 41
-#define WEAP_FIREEXTINGUISHER 42
-#define WEAP_CAMERA 43
-#define WEAP_PARACHUTE 56
 
 //LOGIN SYSTEM//
 #define DIALOG_REGISTER 1
@@ -223,38 +156,37 @@ main()
 
 public OnGameModeInit()
 {
-	// Don't use these lines if it's a filterscript
 	SetGameModeText("SFTA "SFTA_VERSION"");
 	
-	AddPlayerClass(0, -1606.8878, 717.8130, 12.2245, 358.9309, 0, 0, 0, 0, 0, 0);  //CJ
+	AddPlayerClass(SKIN_CJ, -1606.8878, 717.8130, 12.2245, 358.9309, 0, 0, 0, 0, 0, 0);
 	
 	//SF FIXED PICKUPS SPAWN LOCATIONS
-	pickupPoliceSF = CreatePickup(1581, 1, -1614.5913, 714.1862, 13.6163, -1);
+	pickupPoliceSF = CreatePickup(PICKUP_KEYCARD, 1, -1614.5913, 714.1862, 13.6163, -1);
 	
 	//SF FIXED CAR SPAWN LOCATIONS
-	AddStaticVehicle(597,-1594.5317,673.6928,6.9547,1.0495,0,1); // copcarsf1
-	AddStaticVehicle(597,-1610.2531,651.7255,6.9569,176.7788,0,1); // copcarsf2
-	AddStaticVehicle(597,-1592.2277,748.4681,-5.4734,177.1311,0,1); // copcarsf3
-	AddStaticVehicle(597,-1638.6682,682.3401,-5.4734,91.6074,0,1); // copcarsf4
-	AddStaticVehicle(523,-1587.0393,672.8373,6.7533,181.1274,0,0); // copbike1
-	AddStaticVehicle(523,-1589.7200,673.0420,6.7583,182.1457,0,0); // copbike2
-	AddStaticVehicle(497,-1679.8846,706.0021,30.7769,79.4707,0,1); // polmav1
-	AddStaticVehicle(601,-1612.4661,732.2926,-5.4816,357.3998,1,1); // swatspecialveh1
-	AddStaticVehicle(601,-1616.6752,732.6617,-5.4794,359.8055,1,1); // swatspecialveh2
-	AddStaticVehicle(427,-1605.9714,733.1621,-5.1049,358.7123,0,1); // swatenforcer1
-	AddStaticVehicle(427,-1600.1976,676.3246,-5.1085,1.9666,0,1); // swatenforcer2
+	AddStaticVehicle(VEH_COPCARSF,-1594.5317,673.6928,6.9547,1.0495,0,1);
+	AddStaticVehicle(VEH_COPCARSF,-1610.2531,651.7255,6.9569,176.7788,0,1);
+	AddStaticVehicle(VEH_COPCARSF,-1592.2277,748.4681,-5.4734,177.1311,0,1);
+	AddStaticVehicle(VEH_COPCARSF,-1638.6682,682.3401,-5.4734,91.6074,0,1);
+	AddStaticVehicle(VEH_COPBIKE,-1587.0393,672.8373,6.7533,181.1274,0,0);
+	AddStaticVehicle(VEH_COPBIKE,-1589.7200,673.0420,6.7583,182.1457,0,0);
+	AddStaticVehicle(VEH_POLMAV,-1679.8846,706.0021,30.7769,79.4707,0,1);
+	AddStaticVehicle(VEH_SWATVAN,-1612.4661,732.2926,-5.4816,357.3998,1,1);
+	AddStaticVehicle(VEH_SWATVAN,-1616.6752,732.6617,-5.4794,359.8055,1,1);
+	AddStaticVehicle(VEH_ENFORCER,-1605.9714,733.1621,-5.1049,358.7123,0,1);
+	AddStaticVehicle(VEH_ENFORCER,-1600.1976,676.3246,-5.1085,1.9666,0,1);
 	
-	AddStaticVehicle(416,-2651.5774,594.2109,14.6029,271.1118,1,3); // ambulance1
+	AddStaticVehicle(VEH_AMBULANCE,-2651.5774,594.2109,14.6029,271.1118,1,3);
 	
-	AddStaticVehicle(420,-1987.8477,117.0142,27.3195,359.5417,6,1); // taxitrainstationpos1
-	AddStaticVehicle(420,-1987.9342,127.3036,27.3197,0.1040,6,1); // taxitrainstationpos2
-	AddStaticVehicle(420,-1988.0581,163.5928,27.3186,358.7466,6,1); // taxitrainstationpos3
-	AddStaticVehicle(437,-1988.4558,147.1401,27.6737,359.3782,79,7); // bustrainstationpos
+	AddStaticVehicle(VEH_TAXI,-1987.8477,117.0142,27.3195,359.5417,6,1);
+	AddStaticVehicle(VEH_TAXI,-1987.9342,127.3036,27.3197,0.1040,6,1);
+	AddStaticVehicle(VEH_TAXI,-1988.0581,163.5928,27.3186,358.7466,6,1);
+	AddStaticVehicle(VEH_COACH,-1988.4558,147.1401,27.6737,359.3782,79,7);
 	
-	AddStaticVehicle(407,-2022.5950,92.4361,28.3424,270.9305,3,1); // firetruckpos1
-	AddStaticVehicle(407,-2022.3732,84.1860,28.2939,269.5228,3,1); // firetruckpos2
-	AddStaticVehicle(407,-2053.3821,84.4713,28.6285,90.7700,3,1); // firetruckpos3
-	AddStaticVehicle(544,-2065.8965,56.0458,28.7598,0.1295,3,1); // firetruck2pos1
+	AddStaticVehicle(VEH_FIRETRUCK,-2022.5950,92.4361,28.3424,270.9305,3,1);
+	AddStaticVehicle(VEH_FIRETRUCK,-2022.3732,84.1860,28.2939,269.5228,3,1);
+	AddStaticVehicle(VEH_FIRETRUCK,-2053.3821,84.4713,28.6285,90.7700,3,1);
+	AddStaticVehicle(VEH_FIRETRUCKLA,-2065.8965,56.0458,28.7598,0.1295,3,1);
 
 	return 1;
 }
@@ -289,7 +221,7 @@ public OnPlayerConnect(playerid)
 	}
 	
 	//---------------SHOW MAP ICONS-------------------
-	SetPlayerMapIcon(playerid, ICON_ID_SF_POLICE, -1614.5913, 714.1862, 13.6163, 30, 0, MAPICON_LOCAL);
+	SetPlayerMapIcon(playerid, ICON_POLICE, -1614.5913, 714.1862, 13.6163, 30, 0, MAPICON_LOCAL);
 	
 	return 1;
 }
@@ -661,11 +593,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		        if(dialogid == DIALOG_JOB_SF_POLICE_PICKSKIN && response == 1) {
 					switch(listitem)
 					{
-					case 0: { SetPlayerSkin(playerid, SKIN_ID_SFPD1); PlayerInfo[playerid][pSkinID] = SKIN_ID_SFPD1; }
-					case 1: { SetPlayerSkin(playerid, SKIN_ID_SFPDNA); PlayerInfo[playerid][pSkinID] = SKIN_ID_SFPDNA; }
-					case 2: { SetPlayerSkin(playerid, SKIN_ID_VBFYCPD); PlayerInfo[playerid][pSkinID] = SKIN_ID_VBFYCPD; }
-					case 3: { SetPlayerSkin(playerid, SKIN_ID_LAPDM1); PlayerInfo[playerid][pSkinID] = SKIN_ID_LAPDM1; }
-					case 4: { SetPlayerSkin(playerid, SKIN_ID_SWAT); PlayerInfo[playerid][pSkinID] = SKIN_ID_SWAT; }
+					case 0: { SetPlayerSkin(playerid, SKIN_SFPD1); PlayerInfo[playerid][pSkinID] = SKIN_SFPD1; }
+					case 1: { SetPlayerSkin(playerid, SKIN_SFPDNA); PlayerInfo[playerid][pSkinID] = SKIN_SFPDNA; }
+					case 2: { SetPlayerSkin(playerid, SKIN_VBFYCPD); PlayerInfo[playerid][pSkinID] = SKIN_VBFYCPD; }
+					case 3: { SetPlayerSkin(playerid, SKIN_LAPDM1); PlayerInfo[playerid][pSkinID] = SKIN_LAPDM1; }
+					case 4: { SetPlayerSkin(playerid, SKIN_SWAT); PlayerInfo[playerid][pSkinID] = SKIN_SWAT; }
 					}
 				}
 		    }
