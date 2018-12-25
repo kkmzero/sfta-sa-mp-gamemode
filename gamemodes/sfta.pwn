@@ -8,10 +8,13 @@
 #include <YSI-Includes-4.x\YSI\y_ini>
 
 //---------------GLOBAL DEFINES-------------------
-#define SFTA_VERSION "v0.3.1"
+#define SFTA_VERSION "v0.3.4"
 
 //-------------------PICKUPS----------------------
 new pickupPoliceSF;
+
+new yarrowPoliceSF;
+new yarrowPoliceSFExit;
 
 //----------------DIALOG: JOBS--------------------
 #define DIALOG_JOB_SF_POLICE_ISHIRED 900
@@ -28,6 +31,7 @@ new pickupPoliceSF;
 #define DIALOG_SUCCESS_1 3
 #define DIALOG_SUCCESS_2 4
 #define PATH "sfta/save/%s.ini"
+
 
 enum pInfo
 {
@@ -162,6 +166,9 @@ public OnGameModeInit()
 	
 	//SF FIXED PICKUPS SPAWN LOCATIONS
 	pickupPoliceSF = CreatePickup(PICKUP_KEYCARD, 1, -1614.5913, 714.1862, 13.6163, -1);
+
+	yarrowPoliceSF = CreatePickup(PICKUP_YELLOWENMARKER, 1, -1605.4822, 711.0074, 13.8672+0.5, -1);
+	yarrowPoliceSFExit = CreatePickup(PICKUP_YELLOWENMARKER, 1, 246.3033, 108.8014, 1003.2188+0.5, -1);
 	
 	//SF FIXED CAR SPAWN LOCATIONS
 	AddStaticVehicle(VEH_COPCARSF,-1594.5317,673.6928,6.9547,1.0495,0,1);
@@ -210,13 +217,11 @@ public OnPlayerConnect(playerid)
 	GameTextForPlayer(playerid,"~w~SFTA "SFTA_VERSION"",3000,4);
   	SendClientMessage(playerid,COLOR_WHITE,"Welcome to {88AA88}SFTA{FFFFFF} "SFTA_VERSION"");
   	
-  	if(fexist(UserPath(playerid)))
-	{
+  	if(fexist(UserPath(playerid))) {
 		INI_ParseFile(UserPath(playerid), "LoadUser_%s", .bExtra = true, .extra = playerid);
   		ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_INPUT,""SCOL_WHITE"Login",""SCOL_WHITE"Type your password below to login.","Login","Quit");
 	}
-	else
-	{
+	else {
  		ShowPlayerDialog(playerid, DIALOG_REGISTER, DIALOG_STYLE_INPUT,""SCOL_WHITE"Registering...",""SCOL_WHITE"Type your password below to register a new account.","Register","Quit");
 	}
 	
@@ -275,7 +280,6 @@ public OnPlayerDisconnect(playerid, reason)
 	INI_WriteInt(File,"Weapon12",PlayerInfo[playerid][pWeapon12]);
 	INI_WriteInt(File,"Weapon12Ammo",PlayerInfo[playerid][pWeapon12a]);
 
-	
 	INI_Close(File);
 	
 	return 1;
@@ -325,14 +329,12 @@ public OnPlayerText(playerid, text[])
 
 public OnPlayerCommandText(playerid, cmdtext[])
 {
-	if (strcmp("/help", cmdtext, true, 10) == 0)
-	{
+	if (strcmp("/help", cmdtext, true, 10) == 0) {
 		SendClientMessage(playerid,COLOR_WHITE,"[JOBS] /quitjob ");
 		return 1;
 	}
 	
-	if (strcmp("/quitjob", cmdtext, true, 10) == 0)
-	{
+	if (strcmp("/quitjob", cmdtext, true, 10) == 0) {
 	    PlayerInfo[playerid][pJob] = JOB_NONE;
 		SendClientMessage(playerid,COLOR_GREEN,"You are now unemployed.");
 		return 1;
@@ -407,14 +409,22 @@ public OnPlayerPickUpPickup(playerid, pickupid)
         SetPlayerHealth(playerid, 100.0);
     }*/
     
-    if(pickupid == pickupPoliceSF)
-    {
+    if(pickupid == pickupPoliceSF) {
         if(PlayerInfo[playerid][pJob] != JOB_SF_POLICE){
 			ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE, DIALOG_STYLE_MSGBOX, "San Fierro Police Department", "Do you want to apply for this job?", "Apply", "Close");
 		}
 		else {
-			ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE_ISHIRED, DIALOG_STYLE_MSGBOX, "San Fierro Police Department", "Change Player Skin?", "Yes", "Close");
+			//ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE_ISHIRED, DIALOG_STYLE_MSGBOX, "San Fierro Police Department", "Change Player Skin?", "Yes", "Close");
+			ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE_ISHIRED, DIALOG_STYLE_LIST, "Options", "Change Player Skin\nRefill Ammo", "Pick", "Close");
 		}
+    }
+    else if(pickupid == yarrowPoliceSF) {
+        ISAMPP_TELEPORT(playerid, LOC_SFPDHQ);
+    }
+    else if(pickupid == yarrowPoliceSFExit) {
+        	SetPlayerPos(playerid, -1606.8878, 717.8130, 12.2245);
+			SetPlayerFacingAngle(playerid, 358.9309);
+			SetPlayerInterior(playerid, 0);
     }
     
 	return 1;
@@ -487,13 +497,10 @@ public OnVehicleStreamOut(vehicleid, forplayerid)
 
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
-	switch( dialogid )
-    {
-        case DIALOG_REGISTER:
-        {
+	switch( dialogid ) {
+        case DIALOG_REGISTER: {
             if (!response) return Kick(playerid);
-            if(response)
-            {
+            if(response) {
                 if(!strlen(inputtext)) return ShowPlayerDialog(playerid, DIALOG_REGISTER, DIALOG_STYLE_INPUT, ""SCOL_WHITE"Registering...",""SCOL_RED"You have entered an invalid password.\n"SCOL_WHITE"Type your password below to register a new account.","Register","Quit");
                 new INI:File = INI_Open(UserPath(playerid));
                 INI_SetTag(File,"data");
@@ -532,25 +539,20 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 
                 INI_Close(File);
 
-                
                 SpawnPlayer(playerid);
                 ShowPlayerDialog(playerid, DIALOG_SUCCESS_1, DIALOG_STYLE_MSGBOX,""SCOL_WHITE"Success!",""SCOL_GREEN"Great! You have been registered. Relog to save your stats!","Ok","");
 			}
         }
 
-        case DIALOG_LOGIN:
-        {
+        case DIALOG_LOGIN: {
             if ( !response ) return Kick ( playerid );
-            if( response )
-            {
-                if(udb_hash(inputtext) == PlayerInfo[playerid][pPass])
-                {
+            if( response ) {
+                if(udb_hash(inputtext) == PlayerInfo[playerid][pPass]) {
                     INI_ParseFile(UserPath(playerid), "LoadUser_%s", .bExtra = true, .extra = playerid);
                     GivePlayerMoney(playerid, PlayerInfo[playerid][pCash]);
 					SendClientMessage(playerid,COLOR_GREEN,"You are successfully logged in!");
                 }
-                else
-                {
+                else {
                     ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_INPUT,""SCOL_WHITE"Login",""SCOL_RED"You have entered an incorrect password.\n"SCOL_WHITE"Type your password below to login.","Login","Quit");
                 }
                 return 1;
@@ -561,12 +563,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         //[JOBS]
 
 		//JOB SF POLICE
-		case DIALOG_JOB_SF_POLICE:
-		{
+		case DIALOG_JOB_SF_POLICE: {
 		    if(response) {
             	SendClientMessage(playerid, COLOR_GREEN, "You Are Hired.");
             	PlayerInfo[playerid][pJob] = JOB_SF_POLICE;
-            	GivePlayerWeapon(playerid, WEAP_NIGHTSTICK, 1);
+            	SetPlayerSkin(playerid, SKIN_SFPD1); PlayerInfo[playerid][pSkinID] = SKIN_SFPD1;
 				GivePlayerWeapon(playerid, WEAP_TEARGAS, 5);
 				GivePlayerWeapon(playerid, WEAP_PISTOL, 340);
 				GivePlayerWeapon(playerid, WEAP_SHOTGUN, 80);
@@ -577,22 +578,29 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         	return 1;
 		}
 		
-		case DIALOG_JOB_SF_POLICE_ISHIRED:
-		{
+		case DIALOG_JOB_SF_POLICE_ISHIRED: {
 			if(response) {
+				switch(listitem) {
+				    case 0: { ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE_PICKSKIN, DIALOG_STYLE_LIST, "Skin Selector", "SFPD Officer (M)\nSFPD Officer 2 (M)\nSFPD Officer (F)\nMotorbike Cop\nS.W.A.T Special Forces", "Pick", "Close"); }
+		            case 1: { ResetPlayerWeapons(playerid); GivePlayerWeapon(playerid, WEAP_TEARGAS, 5); GivePlayerWeapon(playerid, WEAP_PISTOL, 340); GivePlayerWeapon(playerid, WEAP_SHOTGUN, 80); GivePlayerWeapon(playerid, WEAP_MP5, 420); }
+				}
+			}
+			else {
+			}
+			return 1;
+		
+		/*	if(response) {
 				ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE_PICKSKIN, DIALOG_STYLE_LIST, "Skin Selector", "SFPD Officer (M)\nSFPD Officer 2 (M)\nSFPD Officer (F)\nMotorbike Cop\nS.W.A.T Special Forces", "Pick", "Close");
         	}
         	else {
         	}
-        	return 1;
+        	return 1;*/
 		}
 		
-		case DIALOG_JOB_SF_POLICE_PICKSKIN:
-		{
+		case DIALOG_JOB_SF_POLICE_PICKSKIN: {
 		    if(response) {
 		        if(dialogid == DIALOG_JOB_SF_POLICE_PICKSKIN && response == 1) {
-					switch(listitem)
-					{
+					switch(listitem) {
 					case 0: { SetPlayerSkin(playerid, SKIN_SFPD1); PlayerInfo[playerid][pSkinID] = SKIN_SFPD1; }
 					case 1: { SetPlayerSkin(playerid, SKIN_SFPDNA); PlayerInfo[playerid][pSkinID] = SKIN_SFPDNA; }
 					case 2: { SetPlayerSkin(playerid, SKIN_VBFYCPD); PlayerInfo[playerid][pSkinID] = SKIN_VBFYCPD; }
