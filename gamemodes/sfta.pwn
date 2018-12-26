@@ -8,7 +8,7 @@
 #include <YSI-Includes-4.x\YSI\y_ini>
 
 //---------------GLOBAL DEFINES-------------------
-#define SFTA_VERSION "v0.3.4"
+#define SFTA_VERSION "v0.3.5"
 
 //-------------------PICKUPS----------------------
 new pickupPoliceSF;
@@ -78,34 +78,35 @@ public LoadUser_data(playerid,name[],value[])
 	INI_Int("Cash",PlayerInfo[playerid][pCash]);
 	INI_Int("Admin",PlayerInfo[playerid][pAdmin]);
 	INI_Int("Kills",PlayerInfo[playerid][pKills]);
-    INI_Int("Deaths",PlayerInfo[playerid][pDeaths]);
-    INI_Int("Job",PlayerInfo[playerid][pJob]);
-    INI_Int("SkinID",PlayerInfo[playerid][pSkinID]);
-    
-    INI_Int("Weapon1",PlayerInfo[playerid][pWeapon1]);
-    INI_Int("Weapon1Ammo",PlayerInfo[playerid][pWeapon1a]);
-    INI_Int("Weapon2",PlayerInfo[playerid][pWeapon2]);
-    INI_Int("Weapon2Ammo",PlayerInfo[playerid][pWeapon2a]);
-    INI_Int("Weapon3",PlayerInfo[playerid][pWeapon3]);
-    INI_Int("Weapon3Ammo",PlayerInfo[playerid][pWeapon3a]);
-    INI_Int("Weapon4",PlayerInfo[playerid][pWeapon4]);
-    INI_Int("Weapon4Ammo",PlayerInfo[playerid][pWeapon4a]);
-    INI_Int("Weapon5",PlayerInfo[playerid][pWeapon5]);
-    INI_Int("Weapon5Ammo",PlayerInfo[playerid][pWeapon5a]);
-    INI_Int("Weapon6",PlayerInfo[playerid][pWeapon6]);
-    INI_Int("Weapon6Ammo",PlayerInfo[playerid][pWeapon6a]);
-    INI_Int("Weapon7",PlayerInfo[playerid][pWeapon7]);
-    INI_Int("Weapon7Ammo",PlayerInfo[playerid][pWeapon7a]);
-    INI_Int("Weapon8",PlayerInfo[playerid][pWeapon8]);
-    INI_Int("Weapon8Ammo",PlayerInfo[playerid][pWeapon8a]);
-    INI_Int("Weapon9",PlayerInfo[playerid][pWeapon9]);
-    INI_Int("Weapon9Ammo",PlayerInfo[playerid][pWeapon9a]);
-    INI_Int("Weapon10",PlayerInfo[playerid][pWeapon10]);
-    INI_Int("Weapon10Ammo",PlayerInfo[playerid][pWeapon10a]);
-    INI_Int("Weapon11",PlayerInfo[playerid][pWeapon11]);
-    INI_Int("Weapon11Ammo",PlayerInfo[playerid][pWeapon11a]);
-    INI_Int("Weapon12",PlayerInfo[playerid][pWeapon12]);
-    INI_Int("Weapon1Ammo",PlayerInfo[playerid][pWeapon1a]);
+	INI_Int("Deaths",PlayerInfo[playerid][pDeaths]);
+	INI_Int("Job",PlayerInfo[playerid][pJob]);
+	INI_Int("SkinID",PlayerInfo[playerid][pSkinID]);
+
+	INI_Int("Weapon1",PlayerInfo[playerid][pWeapon1]);
+	INI_Int("Weapon1Ammo",PlayerInfo[playerid][pWeapon1a]);
+	INI_Int("Weapon2",PlayerInfo[playerid][pWeapon2]);
+	INI_Int("Weapon2Ammo",PlayerInfo[playerid][pWeapon2a]);
+	INI_Int("Weapon3",PlayerInfo[playerid][pWeapon3]);
+	INI_Int("Weapon3Ammo",PlayerInfo[playerid][pWeapon3a]);
+	INI_Int("Weapon4",PlayerInfo[playerid][pWeapon4]);
+	INI_Int("Weapon4Ammo",PlayerInfo[playerid][pWeapon4a]);
+	INI_Int("Weapon5",PlayerInfo[playerid][pWeapon5]);
+	INI_Int("Weapon5Ammo",PlayerInfo[playerid][pWeapon5a]);
+	INI_Int("Weapon6",PlayerInfo[playerid][pWeapon6]);
+	INI_Int("Weapon6Ammo",PlayerInfo[playerid][pWeapon6a]);
+	INI_Int("Weapon7",PlayerInfo[playerid][pWeapon7]);
+	INI_Int("Weapon7Ammo",PlayerInfo[playerid][pWeapon7a]);
+	INI_Int("Weapon8",PlayerInfo[playerid][pWeapon8]);
+	INI_Int("Weapon8Ammo",PlayerInfo[playerid][pWeapon8a]);
+	INI_Int("Weapon9",PlayerInfo[playerid][pWeapon9]);
+	INI_Int("Weapon9Ammo",PlayerInfo[playerid][pWeapon9a]);
+	INI_Int("Weapon10",PlayerInfo[playerid][pWeapon10]);
+	INI_Int("Weapon10Ammo",PlayerInfo[playerid][pWeapon10a]);
+	INI_Int("Weapon11",PlayerInfo[playerid][pWeapon11]);
+	INI_Int("Weapon11Ammo",PlayerInfo[playerid][pWeapon11a]);
+	INI_Int("Weapon12",PlayerInfo[playerid][pWeapon12]);
+	INI_Int("Weapon1Ammo",PlayerInfo[playerid][pWeapon1a]);
+
  	return 1;
 }
 
@@ -119,14 +120,13 @@ stock UserPath(playerid)
 
 stock udb_hash(buf[]) {
 	new length=strlen(buf);
-    new s1 = 1;
-    new s2 = 0;
-    new n;
-    for (n=0; n<length; n++)
-    {
-       s1 = (s1 + buf[n]) % 65521;
-       s2 = (s2 + s1)     % 65521;
-    }
+	new s1 = 1;
+	new s2 = 0;
+	new n;
+	for (n=0; n<length; n++) {
+		s1 = (s1 + buf[n]) % 65521;
+		s2 = (s2 + s1)     % 65521;
+	}
     return (s2 << 16) + s1;
 }
 //END LOGIN SYSTEM//
@@ -165,7 +165,7 @@ public OnGameModeInit()
 	AddPlayerClass(SKIN_CJ, -1606.8878, 717.8130, 12.2245, 358.9309, 0, 0, 0, 0, 0, 0);
 	
 	//SF FIXED PICKUPS SPAWN LOCATIONS
-	pickupPoliceSF = CreatePickup(PICKUP_KEYCARD, 1, -1614.5913, 714.1862, 13.6163, -1);
+	pickupPoliceSF = CreatePickup(PICKUP_KEYCARD, 1, 246.3343, 117.1116, 1003.2188, -1);
 
 	yarrowPoliceSF = CreatePickup(PICKUP_YELLOWENMARKER, 1, -1605.4822, 711.0074, 13.8672+0.5, -1);
 	yarrowPoliceSFExit = CreatePickup(PICKUP_YELLOWENMARKER, 1, 246.3033, 108.8014, 1003.2188+0.5, -1);
@@ -287,21 +287,21 @@ public OnPlayerDisconnect(playerid, reason)
 
 public OnPlayerSpawn(playerid)
 {
-    SetPlayerSkin(playerid, PlayerInfo[playerid][pSkinID]);
-    
-    GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon1], PlayerInfo[playerid][pWeapon1a]);
-    GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon2], PlayerInfo[playerid][pWeapon2a]);
-    GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon3], PlayerInfo[playerid][pWeapon3a]);
-    GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon4], PlayerInfo[playerid][pWeapon4a]);
-    GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon5], PlayerInfo[playerid][pWeapon5a]);
-    GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon6], PlayerInfo[playerid][pWeapon6a]);
-    GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon7], PlayerInfo[playerid][pWeapon7a]);
-    GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon8], PlayerInfo[playerid][pWeapon8a]);
-    GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon9], PlayerInfo[playerid][pWeapon9a]);
-    GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon10], PlayerInfo[playerid][pWeapon10a]);
-    GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon11], PlayerInfo[playerid][pWeapon11a]);
-    GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon12], PlayerInfo[playerid][pWeapon12a]);
-    
+	SetPlayerSkin(playerid, PlayerInfo[playerid][pSkinID]);
+
+	GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon1], PlayerInfo[playerid][pWeapon1a]);
+	GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon2], PlayerInfo[playerid][pWeapon2a]);
+	GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon3], PlayerInfo[playerid][pWeapon3a]);
+	GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon4], PlayerInfo[playerid][pWeapon4a]);
+	GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon5], PlayerInfo[playerid][pWeapon5a]);
+	GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon6], PlayerInfo[playerid][pWeapon6a]);
+	GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon7], PlayerInfo[playerid][pWeapon7a]);
+	GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon8], PlayerInfo[playerid][pWeapon8a]);
+	GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon9], PlayerInfo[playerid][pWeapon9a]);
+	GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon10], PlayerInfo[playerid][pWeapon10a]);
+	GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon11], PlayerInfo[playerid][pWeapon11a]);
+	GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon12], PlayerInfo[playerid][pWeapon12a]);
+
 	return 1;
 }
 
@@ -331,12 +331,22 @@ public OnPlayerCommandText(playerid, cmdtext[])
 {
 	if (strcmp("/help", cmdtext, true, 10) == 0) {
 		SendClientMessage(playerid,COLOR_WHITE,"[JOBS] /quitjob ");
+		SendClientMessage(playerid,COLOR_WHITE,"[MISC] /unstick ");
 		return 1;
 	}
 	
 	if (strcmp("/quitjob", cmdtext, true, 10) == 0) {
 	    PlayerInfo[playerid][pJob] = JOB_NONE;
+	    ResetPlayerWeapons(playerid);
+	    SetPlayerSkin(playerid, SKIN_MALE01); PlayerInfo[playerid][pSkinID] = SKIN_MALE01;
 		SendClientMessage(playerid,COLOR_GREEN,"You are now unemployed.");
+		return 1;
+	}
+	
+	if (strcmp("/unstick", cmdtext, true, 10) == 0) {
+		SetPlayerPos(playerid, -2984.2524, 472.7769, 4.9141);
+		SetPlayerFacingAngle(playerid, 261.3416);
+		SetPlayerInterior(playerid, 0);
 		return 1;
 	}
 	
@@ -400,33 +410,24 @@ public OnPlayerObjectMoved(playerid, objectid)
 
 public OnPlayerPickUpPickup(playerid, pickupid)
 {
-    /*if(pickupid == pickup_Cash)
-    {
-        GivePlayerMoney(playerid, 1000);
-    }
-    else if(pickupid == pickup_Health)
-    {
-        SetPlayerHealth(playerid, 100.0);
-    }*/
-    
-    if(pickupid == pickupPoliceSF) {
-        if(PlayerInfo[playerid][pJob] != JOB_SF_POLICE){
+	if(pickupid == pickupPoliceSF) {
+		if(PlayerInfo[playerid][pJob] != JOB_SF_POLICE){
 			ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE, DIALOG_STYLE_MSGBOX, "San Fierro Police Department", "Do you want to apply for this job?", "Apply", "Close");
 		}
 		else {
 			//ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE_ISHIRED, DIALOG_STYLE_MSGBOX, "San Fierro Police Department", "Change Player Skin?", "Yes", "Close");
 			ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE_ISHIRED, DIALOG_STYLE_LIST, "Options", "Change Player Skin\nRefill Ammo", "Pick", "Close");
 		}
-    }
-    else if(pickupid == yarrowPoliceSF) {
-        ISAMPP_TELEPORT(playerid, LOC_SFPDHQ);
-    }
-    else if(pickupid == yarrowPoliceSFExit) {
-        	SetPlayerPos(playerid, -1606.8878, 717.8130, 12.2245);
-			SetPlayerFacingAngle(playerid, 358.9309);
-			SetPlayerInterior(playerid, 0);
-    }
-    
+	}
+	else if(pickupid == yarrowPoliceSF) {
+		ISAMPP_TELEPORT(playerid, LOC_SFPDHQ);
+	}
+	else if(pickupid == yarrowPoliceSFExit) {
+		SetPlayerPos(playerid, -1606.0922, 718.2661, 12.0804);
+		SetPlayerFacingAngle(playerid, 2.0876);
+		SetPlayerInterior(playerid, 0);
+	}
+
 	return 1;
 }
 
@@ -498,91 +499,92 @@ public OnVehicleStreamOut(vehicleid, forplayerid)
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
 	switch( dialogid ) {
-        case DIALOG_REGISTER: {
-            if (!response) return Kick(playerid);
-            if(response) {
-                if(!strlen(inputtext)) return ShowPlayerDialog(playerid, DIALOG_REGISTER, DIALOG_STYLE_INPUT, ""SCOL_WHITE"Registering...",""SCOL_RED"You have entered an invalid password.\n"SCOL_WHITE"Type your password below to register a new account.","Register","Quit");
-                new INI:File = INI_Open(UserPath(playerid));
-                INI_SetTag(File,"data");
-                INI_WriteInt(File,"Password",udb_hash(inputtext));
-                INI_WriteInt(File,"Cash",0);
-                INI_WriteInt(File,"Admin",0);
-                INI_WriteInt(File,"Kills",0);
-                INI_WriteInt(File,"Deaths",0);
-                INI_WriteInt(File,"Job",0);
-                INI_WriteInt(File,"SkinID",0);
-                
-                INI_WriteInt(File,"Weapon1",0);
-                INI_WriteInt(File,"Weapon1Ammo",0);
-            	INI_WriteInt(File,"Weapon2",0);
-                INI_WriteInt(File,"Weapon3Ammo",0);
-                INI_WriteInt(File,"Weapon3",0);
-                INI_WriteInt(File,"Weapon3Ammo",0);
-                INI_WriteInt(File,"Weapon4",0);
-                INI_WriteInt(File,"Weapon4Ammo",0);
-                INI_WriteInt(File,"Weapon5",0);
-                INI_WriteInt(File,"Weapon5Ammo",0);
-                INI_WriteInt(File,"Weapon6",0);
-                INI_WriteInt(File,"Weapon6Ammo",0);
-                INI_WriteInt(File,"Weapon7",0);
-                INI_WriteInt(File,"Weapon7Ammo",0);
-                INI_WriteInt(File,"Weapon8",0);
-                INI_WriteInt(File,"Weapon8Ammo",0);
-                INI_WriteInt(File,"Weapon9",0);
-                INI_WriteInt(File,"Weapon9Ammo",0);
-                INI_WriteInt(File,"Weapon10",0);
-                INI_WriteInt(File,"Weapon10Ammo",0);
-                INI_WriteInt(File,"Weapon11",0);
-                INI_WriteInt(File,"Weapon11Ammo",0);
-             	INI_WriteInt(File,"Weapon12",0);
-                INI_WriteInt(File,"Weapon12Ammo",0);
-                
-                INI_Close(File);
+		case DIALOG_REGISTER: {
+			if (!response) return Kick(playerid);
+			if(response) {
+				if(!strlen(inputtext)) return ShowPlayerDialog(playerid, DIALOG_REGISTER, DIALOG_STYLE_INPUT, ""SCOL_WHITE"Registering...",""SCOL_RED"You have entered an invalid password.\n"SCOL_WHITE"Type your password below to register a new account.","Register","Quit");
+				new INI:File = INI_Open(UserPath(playerid));
+				INI_SetTag(File,"data");
+				INI_WriteInt(File,"Password",udb_hash(inputtext));
+				INI_WriteInt(File,"Cash",0);
+				INI_WriteInt(File,"Admin",0);
+				INI_WriteInt(File,"Kills",0);
+				INI_WriteInt(File,"Deaths",0);
+				INI_WriteInt(File,"Job",0);
+				INI_WriteInt(File,"SkinID",0);
 
-                SpawnPlayer(playerid);
-                ShowPlayerDialog(playerid, DIALOG_SUCCESS_1, DIALOG_STYLE_MSGBOX,""SCOL_WHITE"Success!",""SCOL_GREEN"Great! You have been registered. Relog to save your stats!","Ok","");
+				INI_WriteInt(File,"Weapon1",0);
+				INI_WriteInt(File,"Weapon1Ammo",0);
+				INI_WriteInt(File,"Weapon2",0);
+				INI_WriteInt(File,"Weapon3Ammo",0);
+				INI_WriteInt(File,"Weapon3",0);
+				INI_WriteInt(File,"Weapon3Ammo",0);
+				INI_WriteInt(File,"Weapon4",0);
+				INI_WriteInt(File,"Weapon4Ammo",0);
+				INI_WriteInt(File,"Weapon5",0);
+				INI_WriteInt(File,"Weapon5Ammo",0);
+				INI_WriteInt(File,"Weapon6",0);
+				INI_WriteInt(File,"Weapon6Ammo",0);
+				INI_WriteInt(File,"Weapon7",0);
+				INI_WriteInt(File,"Weapon7Ammo",0);
+				INI_WriteInt(File,"Weapon8",0);
+				INI_WriteInt(File,"Weapon8Ammo",0);
+				INI_WriteInt(File,"Weapon9",0);
+				INI_WriteInt(File,"Weapon9Ammo",0);
+				INI_WriteInt(File,"Weapon10",0);
+				INI_WriteInt(File,"Weapon10Ammo",0);
+				INI_WriteInt(File,"Weapon11",0);
+				INI_WriteInt(File,"Weapon11Ammo",0);
+				INI_WriteInt(File,"Weapon12",0);
+				INI_WriteInt(File,"Weapon12Ammo",0);
+
+				INI_Close(File);
+
+				SpawnPlayer(playerid);
+				ShowPlayerDialog(playerid, DIALOG_SUCCESS_1, DIALOG_STYLE_MSGBOX,""SCOL_WHITE"Success!",""SCOL_GREEN"Great! You have been registered. Relog to save your stats!","Ok","");
 			}
-        }
+		}
 
-        case DIALOG_LOGIN: {
-            if ( !response ) return Kick ( playerid );
-            if( response ) {
-                if(udb_hash(inputtext) == PlayerInfo[playerid][pPass]) {
-                    INI_ParseFile(UserPath(playerid), "LoadUser_%s", .bExtra = true, .extra = playerid);
-                    GivePlayerMoney(playerid, PlayerInfo[playerid][pCash]);
+		case DIALOG_LOGIN: {
+			if ( !response ) return Kick ( playerid );
+			if( response ) {
+				if(udb_hash(inputtext) == PlayerInfo[playerid][pPass]) {
+					INI_ParseFile(UserPath(playerid), "LoadUser_%s", .bExtra = true, .extra = playerid);
+					GivePlayerMoney(playerid, PlayerInfo[playerid][pCash]);
 					SendClientMessage(playerid,COLOR_GREEN,"You are successfully logged in!");
-                }
-                else {
-                    ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_INPUT,""SCOL_WHITE"Login",""SCOL_RED"You have entered an incorrect password.\n"SCOL_WHITE"Type your password below to login.","Login","Quit");
-                }
-                return 1;
-            }
-        }
-        
-        
-        //[JOBS]
+				}
+				else {
+					ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_INPUT,""SCOL_WHITE"Login",""SCOL_RED"You have entered an incorrect password.\n"SCOL_WHITE"Type your password below to login.","Login","Quit");
+				}
+				return 1;
+			}
+		}
+
+
+		//[JOBS]
 
 		//JOB SF POLICE
 		case DIALOG_JOB_SF_POLICE: {
-		    if(response) {
-            	SendClientMessage(playerid, COLOR_GREEN, "You Are Hired.");
-            	PlayerInfo[playerid][pJob] = JOB_SF_POLICE;
-            	SetPlayerSkin(playerid, SKIN_SFPD1); PlayerInfo[playerid][pSkinID] = SKIN_SFPD1;
+			if(response) {
+				SendClientMessage(playerid, COLOR_GREEN, "You Are Hired.");
+				PlayerInfo[playerid][pJob] = JOB_SF_POLICE;
+				SetPlayerSkin(playerid, SKIN_SFPD1); PlayerInfo[playerid][pSkinID] = SKIN_SFPD1;
+				ResetPlayerWeapons(playerid);
 				GivePlayerWeapon(playerid, WEAP_TEARGAS, 5);
 				GivePlayerWeapon(playerid, WEAP_PISTOL, 340);
-				GivePlayerWeapon(playerid, WEAP_SHOTGUN, 80);
+				GivePlayerWeapon(playerid, WEAP_SHOTGUN, 40);
 				GivePlayerWeapon(playerid, WEAP_MP5, 420);
-        	}
-        	else {
-        	}
-        	return 1;
+			}
+			else {
+			}
+			return 1;
 		}
-		
+
 		case DIALOG_JOB_SF_POLICE_ISHIRED: {
 			if(response) {
 				switch(listitem) {
-				    case 0: { ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE_PICKSKIN, DIALOG_STYLE_LIST, "Skin Selector", "SFPD Officer (M)\nSFPD Officer 2 (M)\nSFPD Officer (F)\nMotorbike Cop\nS.W.A.T Special Forces", "Pick", "Close"); }
-		            case 1: { ResetPlayerWeapons(playerid); GivePlayerWeapon(playerid, WEAP_TEARGAS, 5); GivePlayerWeapon(playerid, WEAP_PISTOL, 340); GivePlayerWeapon(playerid, WEAP_SHOTGUN, 80); GivePlayerWeapon(playerid, WEAP_MP5, 420); }
+					case 0: { ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE_PICKSKIN, DIALOG_STYLE_LIST, "Skin Selector", "SFPD Officer (M)\nSFPD Officer 2 (M)\nSFPD Officer (F)\nMotorbike Cop\nS.W.A.T Special Forces", "Pick", "Close"); }
+					case 1: { ResetPlayerWeapons(playerid); GivePlayerWeapon(playerid, WEAP_TEARGAS, 5); GivePlayerWeapon(playerid, WEAP_PISTOL, 340); GivePlayerWeapon(playerid, WEAP_SHOTGUN, 40); GivePlayerWeapon(playerid, WEAP_MP5, 420); }
 				}
 			}
 			else {
@@ -596,10 +598,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         	}
         	return 1;*/
 		}
-		
+
 		case DIALOG_JOB_SF_POLICE_PICKSKIN: {
-		    if(response) {
-		        if(dialogid == DIALOG_JOB_SF_POLICE_PICKSKIN && response == 1) {
+			if(response) {
+				if(dialogid == DIALOG_JOB_SF_POLICE_PICKSKIN && response == 1) {
 					switch(listitem) {
 					case 0: { SetPlayerSkin(playerid, SKIN_SFPD1); PlayerInfo[playerid][pSkinID] = SKIN_SFPD1; }
 					case 1: { SetPlayerSkin(playerid, SKIN_SFPDNA); PlayerInfo[playerid][pSkinID] = SKIN_SFPDNA; }
@@ -608,15 +610,15 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					case 4: { SetPlayerSkin(playerid, SKIN_SWAT); PlayerInfo[playerid][pSkinID] = SKIN_SWAT; }
 					}
 				}
-		    }
+			}
 			else {
 			}
 			return 1;
 		}
 		//END JOB SF POLICE
-		
-    }
-    return 1;
+
+	}
+	return 1;
 }
 
 public OnPlayerClickPlayer(playerid, clickedplayerid, source)
