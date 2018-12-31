@@ -8,13 +8,18 @@
 #include <YSI-Includes-4.x\YSI\y_ini>
 
 //---------------GLOBAL DEFINES-------------------
-#define SFTA_VERSION "v0.3.5"
+#define SFTA_VERSION "v0.3.8"
+
+#define TREATMENT_COST 1000
 
 //-------------------PICKUPS----------------------
 new pickupPoliceSF;
+new pickupParaSF;
 
 new yarrowPoliceSF;
 new yarrowPoliceSFExit;
+
+new pickupHealth1;
 
 //----------------DIALOG: JOBS--------------------
 #define DIALOG_JOB_SF_POLICE_ISHIRED 900
@@ -166,9 +171,12 @@ public OnGameModeInit()
 	
 	//SF FIXED PICKUPS SPAWN LOCATIONS
 	pickupPoliceSF = CreatePickup(PICKUP_KEYCARD, 1, 246.3343, 117.1116, 1003.2188, -1);
+	pickupParaSF = CreatePickup(PICKUP_KEYCARD, 1, -2655.3740, 636.7022, 14.4531, -1);
 
 	yarrowPoliceSF = CreatePickup(PICKUP_YELLOWENMARKER, 1, -1605.4822, 711.0074, 13.8672+0.5, -1);
 	yarrowPoliceSFExit = CreatePickup(PICKUP_YELLOWENMARKER, 1, 246.3033, 108.8014, 1003.2188+0.5, -1);
+	
+	pickupHealth1 = CreatePickup(PICKUP_HEART, 1, -2651.4167, 636.6765, 14.4531, -1);
 	
 	//SF FIXED CAR SPAWN LOCATIONS
 	AddStaticVehicle(VEH_COPCARSF,-1594.5317,673.6928,6.9547,1.0495,0,1);
@@ -226,7 +234,8 @@ public OnPlayerConnect(playerid)
 	}
 	
 	//---------------SHOW MAP ICONS-------------------
-	SetPlayerMapIcon(playerid, ICON_POLICE, -1614.5913, 714.1862, 13.6163, 30, 0, MAPICON_LOCAL);
+	SetPlayerMapIcon(playerid, 0, -1614.5913, 714.1862, 13.6163, ICON_POLICE, 0, MAPICON_GLOBAL);
+	SetPlayerMapIcon(playerid, 1, -2641.4331, 636.5641, 14.4531, ICON_HOSPITAL, 0, MAPICON_GLOBAL);
 	
 	return 1;
 }
@@ -336,10 +345,16 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	}
 	
 	if (strcmp("/quitjob", cmdtext, true, 10) == 0) {
-	    PlayerInfo[playerid][pJob] = JOB_NONE;
-	    ResetPlayerWeapons(playerid);
-	    SetPlayerSkin(playerid, SKIN_MALE01); PlayerInfo[playerid][pSkinID] = SKIN_MALE01;
-		SendClientMessage(playerid,COLOR_GREEN,"You are now unemployed.");
+	    if(PlayerInfo[playerid][pJob] != JOB_NONE) {
+			PlayerInfo[playerid][pJob] = JOB_NONE;
+			ResetPlayerWeapons(playerid);
+			SetPlayerSkin(playerid, SKIN_MALE01); PlayerInfo[playerid][pSkinID] = SKIN_MALE01;
+			SendClientMessage(playerid,COLOR_GREEN,"You are now unemployed.");
+			SetPlayerColor(playerid, COLOR_LIGHTGRAY);
+		}
+		else {
+            SendClientMessage(playerid,COLOR_RED,"You are already unemployed.");
+		}
 		return 1;
 	}
 	
@@ -415,7 +430,6 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 			ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE, DIALOG_STYLE_MSGBOX, "San Fierro Police Department", "Do you want to apply for this job?", "Apply", "Close");
 		}
 		else {
-			//ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE_ISHIRED, DIALOG_STYLE_MSGBOX, "San Fierro Police Department", "Change Player Skin?", "Yes", "Close");
 			ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE_ISHIRED, DIALOG_STYLE_LIST, "Options", "Change Player Skin\nRefill Ammo", "Pick", "Close");
 		}
 	}
@@ -426,6 +440,16 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 		SetPlayerPos(playerid, -1606.0922, 718.2661, 12.0804);
 		SetPlayerFacingAngle(playerid, 2.0876);
 		SetPlayerInterior(playerid, 0);
+	}
+	
+	else if(pickupid == pickupHealth1) {
+		if(GetPlayerMoney(playerid) < TREATMENT_COST) {
+			SendClientMessage(playerid, COLOR_RED, "You dont have enough money!");
+		}
+		else{
+	    	SetPlayerHealth(playerid, 100);
+	    	GivePlayerMoney(playerid, -TREATMENT_COST);
+		}
 	}
 
 	return 1;
@@ -510,7 +534,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				INI_WriteInt(File,"Admin",0);
 				INI_WriteInt(File,"Kills",0);
 				INI_WriteInt(File,"Deaths",0);
-				INI_WriteInt(File,"Job",0);
+				INI_WriteInt(File,"Job",JOB_NONE);
 				INI_WriteInt(File,"SkinID",0);
 
 				INI_WriteInt(File,"Weapon1",0);
@@ -574,6 +598,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				GivePlayerWeapon(playerid, WEAP_PISTOL, 340);
 				GivePlayerWeapon(playerid, WEAP_SHOTGUN, 40);
 				GivePlayerWeapon(playerid, WEAP_MP5, 420);
+				SetPlayerColor(playerid, COLOR_BLUE);
 			}
 			else {
 			}
@@ -590,13 +615,6 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			else {
 			}
 			return 1;
-		
-		/*	if(response) {
-				ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE_PICKSKIN, DIALOG_STYLE_LIST, "Skin Selector", "SFPD Officer (M)\nSFPD Officer 2 (M)\nSFPD Officer (F)\nMotorbike Cop\nS.W.A.T Special Forces", "Pick", "Close");
-        	}
-        	else {
-        	}
-        	return 1;*/
 		}
 
 		case DIALOG_JOB_SF_POLICE_PICKSKIN: {
