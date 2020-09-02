@@ -1,14 +1,28 @@
-//------------------------------------------------
-//-----------SFTA: San Fierro Theft Auto----------
-//---------Game Mode for SA-MP by KKMZero---------
-//------------------------------------------------
+/*
+ * SFTA: San Fierro Theft Auto
+ * RP SA-MP Game Mode by kkmzero
+ *
+ * I dedicate any and all copyright interest in this software to the
+ * public domain. I make this dedication for the benefit of the public at
+ * large and to the detriment of my heirs and successors. I intend this
+ * dedication to be an overt act of relinquishment in perpetuity of all
+ * present and future rights to this software under copyright law.
+ *
+ * For more information, please refer to <http://unlicense.org/>
+ */
+
+/*
+ * WARNING: INI Save files are located in folder:
+ * "[server folder]/scriptfiles/sfta/userdata"
+ * this folder has to be created manually!
+ */
 
 #include <a_samp>
 #include <i_sampp>
 #include <YSI-Includes-4.x\YSI\y_ini>
 
 //---------------GLOBAL DEFINES-------------------
-#define SFTA_VERSION "v0.3.8"
+#define SFTA_VERSION "v0.3.9"
 
 #define TREATMENT_COST 1000
 
@@ -30,12 +44,12 @@ new pickupHealth1;
 #define JOB_NONE 0
 #define JOB_SF_POLICE 1
 
-//LOGIN SYSTEM//
+//----------------LOGIN SYSTEM--------------------
 #define DIALOG_REGISTER 1
 #define DIALOG_LOGIN 2
 #define DIALOG_SUCCESS_1 3
 #define DIALOG_SUCCESS_2 4
-#define PATH "sfta/save/%s.ini"
+#define USERDATA_INI_PATH "scriptfiles/sfta/userdata/%s.ini"
 
 
 enum pInfo
@@ -119,7 +133,7 @@ stock UserPath(playerid)
 {
 	new string[128],playername[MAX_PLAYER_NAME];
 	GetPlayerName(playerid,playername,sizeof(playername));
-	format(string,sizeof(string),PATH,playername);
+	format(string,sizeof(string),USERDATA_INI_PATH,playername);
 	return string;
 }
 
@@ -134,39 +148,35 @@ stock udb_hash(buf[]) {
 	}
     return (s2 << 16) + s1;
 }
-//END LOGIN SYSTEM//
+//[!] END DEF LOGIN SYSTEM
 
 
 #if defined FILTERSCRIPT
-
-public OnFilterScriptInit()
-{
-	print("\n--------------------------------------");
-	print(" SFTA: San Fierro Theft Auto");
-	print("--------------------------------------\n");
+	public OnFilterScriptInit()
+	{
+		print("\n-----------------------------------------");
+		print(" SFTA: San Fierro Theft Auto FilterScript");
+		print("-----------------------------------------\n");
 	return 1;
-}
+	}
 
-public OnFilterScriptExit()
-{
-	return 1;
-}
-
+	public OnFilterScriptExit()
+	{
+		return 1;
+	}
 #else
-
-main()
-{
-	print("\n----------------------------------");
-	print(" SFTA: San Fierro Theft Auto");
-	print("----------------------------------\n");
-}
-
+	main()
+	{
+		print("\n----------------------------");
+		print(" SFTA: San Fierro Theft Auto");
+		print("----------------------------\n");
+	}
 #endif
 
 public OnGameModeInit()
 {
 	SetGameModeText("SFTA "SFTA_VERSION"");
-	
+
 	AddPlayerClass(SKIN_CJ, -1606.8878, 717.8130, 12.2245, 358.9309, 0, 0, 0, 0, 0, 0);
 	
 	//SF FIXED PICKUPS SPAWN LOCATIONS
@@ -190,9 +200,9 @@ public OnGameModeInit()
 	AddStaticVehicle(VEH_SWATVAN,-1616.6752,732.6617,-5.4794,359.8055,1,1);
 	AddStaticVehicle(VEH_ENFORCER,-1605.9714,733.1621,-5.1049,358.7123,0,1);
 	AddStaticVehicle(VEH_ENFORCER,-1600.1976,676.3246,-5.1085,1.9666,0,1);
-	
+
 	AddStaticVehicle(VEH_AMBULANCE,-2651.5774,594.2109,14.6029,271.1118,1,3);
-	
+
 	AddStaticVehicle(VEH_TAXI,-1987.8477,117.0142,27.3195,359.5417,6,1);
 	AddStaticVehicle(VEH_TAXI,-1987.9342,127.3036,27.3197,0.1040,6,1);
 	AddStaticVehicle(VEH_TAXI,-1988.0581,163.5928,27.3186,358.7466,6,1);
@@ -223,20 +233,20 @@ public OnPlayerRequestClass(playerid, classid)
 public OnPlayerConnect(playerid)
 {
 	GameTextForPlayer(playerid,"~w~SFTA "SFTA_VERSION"",3000,4);
-  	SendClientMessage(playerid,COLOR_WHITE,"Welcome to {88AA88}SFTA{FFFFFF} "SFTA_VERSION"");
-  	
-  	if(fexist(UserPath(playerid))) {
+	SendClientMessage(playerid,COLOR_WHITE,"Welcome to {88AA88}SFTA{FFFFFF} "SFTA_VERSION"");
+
+	if(fexist(UserPath(playerid))) {
 		INI_ParseFile(UserPath(playerid), "LoadUser_%s", .bExtra = true, .extra = playerid);
-  		ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_INPUT,""SCOL_WHITE"Login",""SCOL_WHITE"Type your password below to login.","Login","Quit");
+		ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_INPUT,""SCOL_WHITE"Login",""SCOL_WHITE"Type your password below to login.","Login","Quit");
 	}
 	else {
- 		ShowPlayerDialog(playerid, DIALOG_REGISTER, DIALOG_STYLE_INPUT,""SCOL_WHITE"Registering...",""SCOL_WHITE"Type your password below to register a new account.","Register","Quit");
+		ShowPlayerDialog(playerid, DIALOG_REGISTER, DIALOG_STYLE_INPUT,""SCOL_WHITE"Registering...",""SCOL_WHITE"Type your password below to register a new account.","Register","Quit");
 	}
-	
+
 	//---------------SHOW MAP ICONS-------------------
 	SetPlayerMapIcon(playerid, 0, -1614.5913, 714.1862, 13.6163, ICON_POLICE, 0, MAPICON_GLOBAL);
 	SetPlayerMapIcon(playerid, 1, -2641.4331, 636.5641, 14.4531, ICON_HOSPITAL, 0, MAPICON_GLOBAL);
-	
+
 	return 1;
 }
 
@@ -345,7 +355,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	}
 	
 	if (strcmp("/quitjob", cmdtext, true, 10) == 0) {
-	    if(PlayerInfo[playerid][pJob] != JOB_NONE) {
+		if(PlayerInfo[playerid][pJob] != JOB_NONE) {
 			PlayerInfo[playerid][pJob] = JOB_NONE;
 			ResetPlayerWeapons(playerid);
 			SetPlayerSkin(playerid, SKIN_MALE01); PlayerInfo[playerid][pSkinID] = SKIN_MALE01;
@@ -353,7 +363,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			SetPlayerColor(playerid, COLOR_LIGHTGRAY);
 		}
 		else {
-            SendClientMessage(playerid,COLOR_RED,"You are already unemployed.");
+			SendClientMessage(playerid,COLOR_RED,"You are already unemployed.");
 		}
 		return 1;
 	}
@@ -447,8 +457,8 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 			SendClientMessage(playerid, COLOR_RED, "You dont have enough money!");
 		}
 		else{
-	    	SetPlayerHealth(playerid, 100);
-	    	GivePlayerMoney(playerid, -TREATMENT_COST);
+			SetPlayerHealth(playerid, 100);
+			GivePlayerMoney(playerid, -TREATMENT_COST);
 		}
 	}
 
