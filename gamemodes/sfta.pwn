@@ -27,8 +27,8 @@
 #define TREATMENT_COST 1000
 
 //-------------------PICKUPS----------------------
-new pickupPoliceSF;
-new pickupParaSF;
+new pickupJobPoliceSF;
+new pickupJobParaSF;
 
 new yarrowPoliceSF;
 new yarrowPoliceSFExit;
@@ -49,46 +49,30 @@ new pickupHealth1;
 #define DIALOG_LOGIN 2
 #define DIALOG_SUCCESS_1 3
 #define DIALOG_SUCCESS_2 4
-#define USERDATA_INI_PATH "scriptfiles/sfta/userdata/%s.ini"
+#define USERDATA_INI_PATH "/scriptfiles/sfta/userdata/%s.ini"
 
 
 enum pInfo
 {
-	pPass,
-	pCash,
-	pAdmin,
-	pKills,
-	pDeaths,
-	pJob,
- 	pSkinID,
+	//Player Stats
+	pPass, pCash, pAdmin, pKills, pDeaths, pJob, pSkinID,
     
-	//Weapon Slots + Ammo
-	pWeapon1,
-	pWeapon1a,
-	pWeapon2,
-	pWeapon2a,
-	pWeapon3,
- 	pWeapon3a,
-	pWeapon4,
-	pWeapon4a,
-	pWeapon5,
-	pWeapon5a,
-	pWeapon6,
-	pWeapon6a,
-	pWeapon7,
-	pWeapon7a,
-	pWeapon8,
-	pWeapon8a,
-	pWeapon9,
-	pWeapon9a,
-	pWeapon10,
-	pWeapon10a,
-	pWeapon11,
-	pWeapon11a,
-	pWeapon12,
-	pWeapon12a,
+	//Player Weapons in slots + (a)mmo
+	pWeapon1, pWeapon1a,
+	pWeapon2, pWeapon2a,
+	pWeapon3, pWeapon3a,
+	pWeapon4, pWeapon4a,
+	pWeapon5, pWeapon5a,
+	pWeapon6, pWeapon6a,
+	pWeapon7, pWeapon7a,
+	pWeapon8, pWeapon8a,
+	pWeapon9, pWeapon9a,
+	pWeapon10, pWeapon10a,
+	pWeapon11, pWeapon11a,
+	pWeapon12, pWeapon12a,
 }
 new PlayerInfo[MAX_PLAYERS][pInfo];
+
 
 forward LoadUser_data(playerid,name[],value[]);
 public LoadUser_data(playerid,name[],value[])
@@ -124,7 +108,7 @@ public LoadUser_data(playerid,name[],value[])
 	INI_Int("Weapon11",PlayerInfo[playerid][pWeapon11]);
 	INI_Int("Weapon11Ammo",PlayerInfo[playerid][pWeapon11a]);
 	INI_Int("Weapon12",PlayerInfo[playerid][pWeapon12]);
-	INI_Int("Weapon1Ammo",PlayerInfo[playerid][pWeapon1a]);
+	INI_Int("Weapon12Ammo",PlayerInfo[playerid][pWeapon12a]);
 
  	return 1;
 }
@@ -167,21 +151,27 @@ stock udb_hash(buf[]) {
 #else
 	main()
 	{
+		isampp_console_printversion();
+
 		print("\n----------------------------");
 		print(" SFTA: San Fierro Theft Auto");
 		print("----------------------------\n");
 	}
 #endif
 
+
 public OnGameModeInit()
 {
 	SetGameModeText("SFTA "SFTA_VERSION"");
 
-	AddPlayerClass(SKIN_CJ, -1606.8878, 717.8130, 12.2245, 358.9309, 0, 0, 0, 0, 0, 0);
+	AddPlayerClass(SKIN_MALE01, -1606.8878, 717.8130, 12.2245, 358.9309, 0, 0, 0, 0, 0, 0);
+	AddPlayerClass(SKIN_SBFYST, -1606.8878, 717.8130, 12.2245, 358.9309, 0, 0, 0, 0, 0, 0);
+	AddPlayerClass(SKIN_SWMYST, -1606.8878, 717.8130, 12.2245, 358.9309, 0, 0, 0, 0, 0, 0);
+	AddPlayerClass(SKIN_WFYST, -1606.8878, 717.8130, 12.2245, 358.9309, 0, 0, 0, 0, 0, 0);
 	
 	//SF FIXED PICKUPS SPAWN LOCATIONS
-	pickupPoliceSF = CreatePickup(PICKUP_KEYCARD, 1, 246.3343, 117.1116, 1003.2188, -1);
-	pickupParaSF = CreatePickup(PICKUP_KEYCARD, 1, -2655.3740, 636.7022, 14.4531, -1);
+	pickupJobPoliceSF = CreatePickup(PICKUP_KEYCARD, 1, 246.3343, 117.1116, 1003.2188, -1);
+	pickupJobParaSF = CreatePickup(PICKUP_KEYCARD, 1, -2655.3740, 636.7022, 14.4531, -1);
 
 	yarrowPoliceSF = CreatePickup(PICKUP_YELLOWENMARKER, 1, -1605.4822, 711.0074, 13.8672+0.5, -1);
 	yarrowPoliceSFExit = CreatePickup(PICKUP_YELLOWENMARKER, 1, 246.3033, 108.8014, 1003.2188+0.5, -1);
@@ -232,7 +222,7 @@ public OnPlayerRequestClass(playerid, classid)
 
 public OnPlayerConnect(playerid)
 {
-	GameTextForPlayer(playerid,"~w~SFTA "SFTA_VERSION"",3000,4);
+	GameTextForPlayer(playerid,"~w~SFTA "SFTA_VERSION"",3000,GMTEXT_STYLE_SLIM2);
 	SendClientMessage(playerid,COLOR_WHITE,"Welcome to {88AA88}SFTA{FFFFFF} "SFTA_VERSION"");
 
 	if(fexist(UserPath(playerid))) {
@@ -435,13 +425,16 @@ public OnPlayerObjectMoved(playerid, objectid)
 
 public OnPlayerPickUpPickup(playerid, pickupid)
 {
-	if(pickupid == pickupPoliceSF) {
+	if(pickupid == pickupJobPoliceSF) {
 		if(PlayerInfo[playerid][pJob] != JOB_SF_POLICE){
 			ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE, DIALOG_STYLE_MSGBOX, "San Fierro Police Department", "Do you want to apply for this job?", "Apply", "Close");
 		}
 		else {
 			ShowPlayerDialog(playerid, DIALOG_JOB_SF_POLICE_ISHIRED, DIALOG_STYLE_LIST, "Options", "Change Player Skin\nRefill Ammo", "Pick", "Close");
 		}
+	}
+	else if(pickupid == pickupJobParaSF) {
+		//TODO
 	}
 	else if(pickupid == yarrowPoliceSF) {
 		ISAMPP_TELEPORT(playerid, LOC_SFPDHQ);
@@ -580,8 +573,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		}
 
 		case DIALOG_LOGIN: {
-			if ( !response ) return Kick ( playerid );
-			if( response ) {
+			if (!response) return Kick (playerid);
+			if(response) {
 				if(udb_hash(inputtext) == PlayerInfo[playerid][pPass]) {
 					INI_ParseFile(UserPath(playerid), "LoadUser_%s", .bExtra = true, .extra = playerid);
 					GivePlayerMoney(playerid, PlayerInfo[playerid][pCash]);
