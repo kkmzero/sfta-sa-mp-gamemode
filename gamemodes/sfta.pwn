@@ -22,7 +22,12 @@
 #include <YSI-Includes-4.x\YSI\y_ini>
 
 //---------------GLOBAL DEFINES-------------------
-#define SFTA_VERSION "v0.3.9"
+#define SFTA_VERSION "v0.3.10"
+
+
+#define PLAYERCOLOR_ADMIN    COLOR_CRIMSON
+#define PLAYERCOLOR_MOD      COLOR_CORNFLOWERBLUE
+#define PLAYERCOLOR_DEFAULT  COLOR_WHEAT
 
 #define TREATMENT_COST 1000
 
@@ -49,13 +54,13 @@ new pickupHealth1;
 #define DIALOG_LOGIN 2
 #define DIALOG_SUCCESS_1 3
 #define DIALOG_SUCCESS_2 4
-#define USERDATA_INI_PATH "/scriptfiles/sfta/userdata/%s.ini"
+#define USERDATA_INI_PATH "/sfta/userdata/%s.ini"
 
 
 enum pInfo
 {
 	//Player Stats
-	pPass, pCash, pAdmin, pKills, pDeaths, pJob, pSkinID,
+	pPass, pCash, pAdmin, pMod, pKills, pDeaths, pJob, pSkinID,
     
 	//Player Weapons in slots + (a)mmo
 	pWeapon1, pWeapon1a,
@@ -80,6 +85,7 @@ public LoadUser_data(playerid,name[],value[])
 	INI_Int("Password",PlayerInfo[playerid][pPass]);
 	INI_Int("Cash",PlayerInfo[playerid][pCash]);
 	INI_Int("Admin",PlayerInfo[playerid][pAdmin]);
+    INI_Int("Mod",PlayerInfo[playerid][pMod]);
 	INI_Int("Kills",PlayerInfo[playerid][pKills]);
 	INI_Int("Deaths",PlayerInfo[playerid][pDeaths]);
 	INI_Int("Job",PlayerInfo[playerid][pJob]);
@@ -164,10 +170,9 @@ public OnGameModeInit()
 {
 	SetGameModeText("SFTA "SFTA_VERSION"");
 
-	AddPlayerClass(SKIN_MALE01, -1606.8878, 717.8130, 12.2245, 358.9309, 0, 0, 0, 0, 0, 0);
-	AddPlayerClass(SKIN_SBFYST, -1606.8878, 717.8130, 12.2245, 358.9309, 0, 0, 0, 0, 0, 0);
-	AddPlayerClass(SKIN_SWMYST, -1606.8878, 717.8130, 12.2245, 358.9309, 0, 0, 0, 0, 0, 0);
-	AddPlayerClass(SKIN_WFYST, -1606.8878, 717.8130, 12.2245, 358.9309, 0, 0, 0, 0, 0, 0);
+	AddPlayerClass(SKIN_CJ, -1606.8878, 717.8130, 12.2245, 358.9309, 0, 0, 0, 0, 0, 0);
+	
+	ShowPlayerMarkers(PLAYER_MARKERS_MODE_STREAMED);
 	
 	//SF FIXED PICKUPS SPAWN LOCATIONS
 	pickupJobPoliceSF = CreatePickup(PICKUP_KEYCARD, 1, 246.3343, 117.1116, 1003.2188, -1);
@@ -246,6 +251,7 @@ public OnPlayerDisconnect(playerid, reason)
 	INI_SetTag(File,"data");
 	INI_WriteInt(File,"Cash",GetPlayerMoney(playerid));
 	INI_WriteInt(File,"Admin",PlayerInfo[playerid][pAdmin]);
+    INI_WriteInt(File,"Mod",PlayerInfo[playerid][pMod]);
 	INI_WriteInt(File,"Kills",PlayerInfo[playerid][pKills]);
 	INI_WriteInt(File,"Deaths",PlayerInfo[playerid][pDeaths]);
 	INI_WriteInt(File,"Job",PlayerInfo[playerid][pJob]);
@@ -297,6 +303,16 @@ public OnPlayerDisconnect(playerid, reason)
 public OnPlayerSpawn(playerid)
 {
 	SetPlayerSkin(playerid, PlayerInfo[playerid][pSkinID]);
+	
+	if(PlayerInfo[playerid][pMod]) {
+		SetPlayerColor(playerid, PLAYERCOLOR_MOD);
+	} else if (PlayerInfo[playerid][pAdmin]) {
+		SetPlayerColor(playerid, PLAYERCOLOR_ADMIN);
+	} else {
+		SetPlayerColor(playerid, PLAYERCOLOR_DEFAULT);
+	}
+
+	GivePlayerMoney(playerid, PlayerInfo[playerid][pCash]);
 
 	GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon1], PlayerInfo[playerid][pWeapon1a]);
 	GivePlayerWeapon(playerid, PlayerInfo[playerid][pWeapon2], PlayerInfo[playerid][pWeapon2a]);
@@ -338,9 +354,45 @@ public OnPlayerText(playerid, text[])
 
 public OnPlayerCommandText(playerid, cmdtext[])
 {
+	//ADMIN COMMANDS
+	if (strcmp("/admin", cmdtext, true, 20) == 0) {
+		if(PlayerInfo[playerid][pAdmin]) {
+			SendClientMessage(playerid, COLOR_GREEN, "Test: Admin");
+		}
+		else {
+			SendClientMessage(playerid, COLOR_RED, "You have to be Admin!");
+		}
+		return 1;
+	}
+
+	/*if (strcmp("/givemod", cmdtext, true, 20) == 0) {
+		return 1;
+	}
+
+	if (strcmp("/unmod", cmdtext, true, 20) == 0) {
+		return 1;
+	}*/
+
+    if (strcmp("/getplayerpos", cmdtext, true, 20) == 0) {
+		ISAMPP_SHOWPLAYERPOSITION(playerid, COLOR_LIGHTRED);
+		return 1;
+	}
+
+	//MODERATOR COMMANDS
+	if (strcmp("/mod", cmdtext, true, 20) == 0) {
+		if(PlayerInfo[playerid][pMod]) {
+			SendClientMessage(playerid, COLOR_GREEN, "Test: Mod");
+		}
+		else {
+			SendClientMessage(playerid, COLOR_RED, "You have to be Moderator!");
+		}
+		return 1;
+	}
+
+	//PLAYER COMMANDS
 	if (strcmp("/help", cmdtext, true, 10) == 0) {
-		SendClientMessage(playerid,COLOR_WHITE,"[JOBS] /quitjob ");
-		SendClientMessage(playerid,COLOR_WHITE,"[MISC] /unstick ");
+		SendClientMessage(playerid, COLOR_WHITE, "[JOBS] /quitjob ");
+		SendClientMessage(playerid, COLOR_WHITE, "[MISC] /unstick ");
 		return 1;
 	}
 	
@@ -348,7 +400,10 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		if(PlayerInfo[playerid][pJob] != JOB_NONE) {
 			PlayerInfo[playerid][pJob] = JOB_NONE;
 			ResetPlayerWeapons(playerid);
-			SetPlayerSkin(playerid, SKIN_MALE01); PlayerInfo[playerid][pSkinID] = SKIN_MALE01;
+
+			SetPlayerSkin(playerid, SKIN_MALE01);
+			PlayerInfo[playerid][pSkinID] = SKIN_MALE01;
+
 			SendClientMessage(playerid,COLOR_GREEN,"You are now unemployed.");
 			SetPlayerColor(playerid, COLOR_LIGHTGRAY);
 		}
@@ -359,9 +414,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	}
 	
 	if (strcmp("/unstick", cmdtext, true, 10) == 0) {
-		SetPlayerPos(playerid, -2984.2524, 472.7769, 4.9141);
-		SetPlayerFacingAngle(playerid, 261.3416);
-		SetPlayerInterior(playerid, 0);
+		ISAMPP_TELEPORT_TO_COORDS(playerid, -2984.2524, 472.7769, 4.9141, 0, 261.3416);
 		return 1;
 	}
 	
@@ -436,13 +489,13 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	else if(pickupid == pickupJobParaSF) {
 		//TODO
 	}
+
+	//Yellow Arrows
 	else if(pickupid == yarrowPoliceSF) {
 		ISAMPP_TELEPORT(playerid, LOC_SFPDHQ);
 	}
 	else if(pickupid == yarrowPoliceSFExit) {
-		SetPlayerPos(playerid, -1606.0922, 718.2661, 12.0804);
-		SetPlayerFacingAngle(playerid, 2.0876);
-		SetPlayerInterior(playerid, 0);
+		ISAMPP_TELEPORT_TO_COORDS(playerid, -1606.0922, 718.2661, 12.0804, 0, 0);
 	}
 	
 	else if(pickupid == pickupHealth1) {
@@ -577,7 +630,6 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(response) {
 				if(udb_hash(inputtext) == PlayerInfo[playerid][pPass]) {
 					INI_ParseFile(UserPath(playerid), "LoadUser_%s", .bExtra = true, .extra = playerid);
-					GivePlayerMoney(playerid, PlayerInfo[playerid][pCash]);
 					SendClientMessage(playerid,COLOR_GREEN,"You are successfully logged in!");
 				}
 				else {
@@ -595,7 +647,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(response) {
 				SendClientMessage(playerid, COLOR_GREEN, "You Are Hired.");
 				PlayerInfo[playerid][pJob] = JOB_SF_POLICE;
-				SetPlayerSkin(playerid, SKIN_SFPD1); PlayerInfo[playerid][pSkinID] = SKIN_SFPD1;
+				SetPlayerSkin(playerid, SKIN_SFPD1);
+				PlayerInfo[playerid][pSkinID] = SKIN_SFPD1;
 				ResetPlayerWeapons(playerid);
 				GivePlayerWeapon(playerid, WEAP_TEARGAS, 5);
 				GivePlayerWeapon(playerid, WEAP_PISTOL, 340);
