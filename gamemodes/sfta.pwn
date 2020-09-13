@@ -85,7 +85,7 @@ public LoadUser_data(playerid,name[],value[])
 	INI_Int("Password",PlayerInfo[playerid][pPass]);
 	INI_Int("Cash",PlayerInfo[playerid][pCash]);
 	INI_Int("Admin",PlayerInfo[playerid][pAdmin]);
-    INI_Int("Mod",PlayerInfo[playerid][pMod]);
+	INI_Int("Mod",PlayerInfo[playerid][pMod]);
 	INI_Int("Kills",PlayerInfo[playerid][pKills]);
 	INI_Int("Deaths",PlayerInfo[playerid][pDeaths]);
 	INI_Int("Job",PlayerInfo[playerid][pJob]);
@@ -374,7 +374,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	}*/
 
     if (strcmp("/getplayerpos", cmdtext, true, 20) == 0) {
-		ISAMPP_SHOWPLAYERPOSITION(playerid, COLOR_LIGHTRED);
+		MppShowPlayerPosition(playerid, COLOR_LIGHTRED);
 		return 1;
 	}
 
@@ -414,7 +414,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	}
 	
 	if (strcmp("/unstick", cmdtext, true, 10) == 0) {
-		ISAMPP_TELEPORT_TO_COORDS(playerid, -2984.2524, 472.7769, 4.9141, 0, 261.3416);
+		MppTeleportToCoords(playerid, -2984.2524, 472.7769, 4.9141, 0, 261.3416);
 		return 1;
 	}
 	
@@ -492,10 +492,10 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 
 	//Yellow Arrows
 	else if(pickupid == yarrowPoliceSF) {
-		ISAMPP_TELEPORT(playerid, LOC_SFPDHQ);
+		MppTeleport(playerid, LOC_SFPDHQ);
 	}
 	else if(pickupid == yarrowPoliceSFExit) {
-		ISAMPP_TELEPORT_TO_COORDS(playerid, -1606.0922, 718.2661, 12.0804, 0, 0);
+		MppTeleportToCoords(playerid, -1606.0922, 718.2661, 12.0804, 0, 0);
 	}
 	
 	else if(pickupid == pickupHealth1) {
