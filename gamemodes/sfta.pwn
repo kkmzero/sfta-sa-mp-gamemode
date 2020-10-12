@@ -2,13 +2,8 @@
  * SFTA: San Fierro Theft Auto
  * RP SA-MP Game Mode by kkmzero
  *
- * I dedicate any and all copyright interest in this software to the
- * public domain. I make this dedication for the benefit of the public at
- * large and to the detriment of my heirs and successors. I intend this
- * dedication to be an overt act of relinquishment in perpetuity of all
- * present and future rights to this software under copyright law.
- *
- * For more information, please refer to <http://unlicense.org/>
+ * CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
+ * https://creativecommons.org/publicdomain/zero/1.0/
  */
 
 /*
